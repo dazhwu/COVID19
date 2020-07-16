@@ -13,6 +13,7 @@ trans <- function(data_file, csv_name) {
                            "Lat",  "Long_",   "Combined_Key"  )
     m_dt <- melt(od, id.vars=variables, variable.name="Date", value.name = "value")
     m_dt[,`:=`(Date=as.Date(Date,format = "%m/%d/%y"))]
+    setnames(m_dt, c("Long_"),c("Longitude"))
     
     prev_d<-m_dt[,c("Date","FIPS","value")]
     prev_d[,`:=`(Date=Date+1)]
