@@ -26,7 +26,7 @@ trans <- function(data_file, csv_name) {
     #fwrite(cd,file=csv_name)
     return(cd)
 }
-system ("rm -r *.csv")
+
 cases_dt=trans("time_series_covid19_confirmed_US.csv", "new_cases.csv")
 setnames(cases_dt, c("value","increment"),c("cum_cases","new_cases"))
 deaths_dt=trans("time_series_covid19_deaths_US.csv", "new_deaths.csv")
@@ -35,4 +35,5 @@ deaths_dt=deaths_dt[,c("FIPS", "Date","cum_deaths","new_deaths")]
 setkeyv(cases_dt, c("FIPS", "Date"))
 setkeyv(deaths_dt, c("FIPS", "Date"))
 cd<-cases_dt[deaths_dt,nomatch=0]
-fwrite(cd,file="covid_us.csv")
+system ("rm -r *.csv")
+fwrite(cd,file="covid_usa.csv")
