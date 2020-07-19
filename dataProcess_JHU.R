@@ -55,5 +55,5 @@ setnames(deaths_dt,
 deaths_dt = deaths_dt[, c("FIPS", "Date", "cum_deaths", "new_deaths")]
 setkeyv(cases_dt, c("FIPS", "Date"))
 setkeyv(deaths_dt, c("FIPS", "Date"))
-cd <- cases_dt[deaths_dt, nomatch = 0]
+cd = cases_dt[deaths_dt, nomatch = 0]
 fwrite(cd, file = "covid_usa.csv")
