@@ -1,6 +1,7 @@
 library(data.table)
 system ("rm -r covid-19-data")
-system("git clone https://github.com/nytimes/covid-19-data")
+#system("git clone https://github.com/nytimes/covid-19-data")
+system(paste("wget -q ","https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv"))
 od<-fread('./covid-19-data/us-counties.csv', header = TRUE)
 od<-od[!is.na(fips)]
 system("rm -r covid-19-data")
