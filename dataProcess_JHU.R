@@ -1,10 +1,12 @@
 library(data.table)
 
-trans <- function(data_file, csv_name) {
+trans <- function(data_file) {
 
     repos="https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/"
+    url = paste(repos, data_file, sep="")
+    download.file(url, data_file)
     
-    system(paste("wget -q ", repos, data_file, sep=""))
+    #system(paste("wget -q ", repos, data_file, sep=""))
 
     od<-fread(data_file, header = TRUE)
     od<-od[!is.na(FIPS)]
@@ -27,9 +29,9 @@ trans <- function(data_file, csv_name) {
     return(cd)
 }
 
-cases_dt=trans("time_series_covid19_confirmed_US.csv", "new_cases.csv")
+cases_dt=trans("time_series_covid19_confirmed_US.csv")
 setnames(cases_dt, c("value","increment"),c("cum_cases","new_cases"))
-deaths_dt=trans("time_series_covid19_deaths_US.csv", "new_deaths.csv")
+deaths_dt=trans("time_series_covid19_deaths_US.csv")
 setnames(deaths_dt, c("value","increment"),c("cum_deaths","new_deaths"))
 deaths_dt=deaths_dt[,c("FIPS", "Date","cum_deaths","new_deaths")]
 setkeyv(cases_dt, c("FIPS", "Date"))
