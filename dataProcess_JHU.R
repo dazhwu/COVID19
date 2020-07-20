@@ -1,6 +1,10 @@
 library(data.table)
+library(openxlsx)
 
 trans <- function(data_file) {
+    if (file.exists(data_file)) {
+        file.remove(data_file)
+    }
     repos = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/"
     url = paste(repos, data_file, sep = "")
     download.file(url, data_file)
@@ -56,4 +60,23 @@ deaths_dt = deaths_dt[, c("FIPS", "Date", "cum_deaths", "new_deaths")]
 setkeyv(cases_dt, c("FIPS", "Date"))
 setkeyv(deaths_dt, c("FIPS", "Date"))
 cd = cases_dt[deaths_dt, nomatch = 0]
-fwrite(cd, file = "covid_usa.csv")
+#fwrite(cd, file = "covid_usa.csv")
+
+population_filename = "population.csv"
+if (file.exists(population_filename)) {
+    file.remove(population_filename)
+}
+
+population_url = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv"
+download.file(population_url, population_filename)
+pop = fread(population_filename)
+file.remove(population_filename)
+
+
+
+wb = createWorkbook()
+addWorksheet(wb = wb, sheetName = "covid19_USA")
+writeDataTable(wb = wb, sheet = 1, x = cd)
+addWorksheet(wb = wb, sheetName = "population")
+writeData(wb = wb, sheet = 2, x = pop)
+saveWorkbook(wb, "covid_JHU.xlsx", overwrite = TRUE)
