@@ -49,7 +49,7 @@ trans <- function(data_file) {
     #fwrite(cd,file=csv_name)
     return(cd)
 }
-
+start_time <- Sys.time()
 cases_dt = trans("time_series_covid19_confirmed_US.csv")
 setnames(cases_dt, c("value", "increment"), c("cum_cases", "new_cases"))
 deaths_dt = trans("time_series_covid19_deaths_US.csv")
@@ -76,7 +76,9 @@ file.remove(population_filename)
 
 wb = createWorkbook()
 addWorksheet(wb = wb, sheetName = "covid19_USA")
-writeDataTable(wb = wb, sheet = 1, x = cd)
+writeData(wb = wb, sheet = 1, x = cd)
 addWorksheet(wb = wb, sheetName = "population")
 writeData(wb = wb, sheet = 2, x = pop)
 saveWorkbook(wb, "covid_JHU.xlsx", overwrite = TRUE)
+end_time <- Sys.time()
+print(end_time-start_time)
